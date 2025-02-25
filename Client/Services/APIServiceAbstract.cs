@@ -17,11 +17,6 @@ namespace BlazorApp.Client.Services {
             var response = await JsonSerializer.DeserializeAsync<ServiceTag>(
                 await _httpClient.GetStreamAsync($"api/ipcheck?ip={ip}"),
                 new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            /***
-            var stream = await _httpClient.GetStreamAsync($"api/ipcheck?ip={ip}");
-            using (var reader = new StreamReader(stream)) {
-                return await reader.ReadToEndAsync();
-            }***/
             return response;
         }
     }
