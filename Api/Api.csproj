@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="DnsClient" Version="1.8.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.20.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.1.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.16.2" />
@@ -26,4 +27,14 @@
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
 	  <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<Content Include=".\ServiceTags_Public_20250217.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Program.cs">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Compile>
+	</ItemGroup>	
 </Project>

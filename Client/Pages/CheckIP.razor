@@ -1,0 +1,68 @@
+﻿@page "/checkip"
+@inject IAPIService ApiService
+
+<PageTitle>Azure IP Checker</PageTitle>
+
+<MudPaper Elevation="0" Class="pa-4" Style="width:50%">
+    <MudText Typo="Typo.h2">Azure IP Checker</MudText>
+    <MudText Typo="Typo.body1">This tool can be used to check an IP if it exists on Azure.</MudText>
+    <MudDivider />
+    <MudGrid Justify="Justify.Center" Class="mx-2 px-4 my-2 py-2">
+        <MudItem xs="6" sm="6" md="6" lg="6" xl="6">
+            <MudTextField @bind-Value="ipAddress" Label="Enter IP Address" For="@(() => ipAddress)" Immediate="true" Validation="@(new Func<string, string>(ValidateIpAddress))" />
+            @if (!string.IsNullOrEmpty(validationMessage)){
+                <MudText Typo="Typo.body1" Color="Color.Error">@validationMessage</MudText>
+            }
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6" xl="6">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="FetchData">Check IP</MudButton>
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12" lg="12" xl="12">
+            <MudTextField T="string" Label="Response" Text="@jsonData" Lines="12"></MudTextField>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    private string ipAddress { get; set; }
+    private string jsonData;
+    private string validationMessage;
+
+    private async Task FetchData()
+    {
+        if (!string.IsNullOrEmpty(ipAddress))
+        {
+            try
+            {
+                var response = await ApiService.GetServiceByIP(ipAddress);
+                Console.WriteLine(response);
+                var addresses = JsonSerializer.Serialize(response.properties.addressPrefixes);
+                jsonData = $"Name:\t{response.name}\nID:\t\t{response.id}\nProperties:\n\tNetwork Features:\t{String.Join(',',response.properties.networkFeatures)}\n\tSystem Service:\t{response.properties.systemService}\n\tAddresses:\n\t\t{String.Join(",\n\t\t",response.properties.addressPrefixes)}";
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+    }
+    private void HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            FetchData();
+    }
+
+    private string ValidateIpAddress(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return "IP address is required.";
+
+        var regex = new Regex(@"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+        if (!regex.IsMatch(value))
+            return "Invalid IP address format.";
+
+        return null;
+    }
+}
+
