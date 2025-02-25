@@ -4,18 +4,16 @@
 <PageTitle>Resolve FQDN</PageTitle>
 
 <MudPaper Elevation="0" Class="pa-4" Style="width:50%">
-    <MudText Typo="Typo.h2">Resolve FQDNr</MudText>
+    <MudText Typo="Typo.h2">Resolve FQDN</MudText>
     <MudText Typo="Typo.body1">This tool can be used to check an FQDN resolution.</MudText>
     <MudDivider />
     <MudGrid Justify="Justify.Center" Class="mx-2 px-4 my-2 py-2">
-        <MudForm>
-            <MudItem xs="6" sm="6" md="6" lg="6" xl="6">
-                <MudTextField @bind-Value="fqdnName" Label="Enter FQDN to resolve" For="@(() => fqdnName)" />
-            </MudItem>
-            <MudItem xs="6" sm="6" md="6" lg="6" xl="6">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="FetchData">Resolve</MudButton>
-            </MudItem>
-        </MudForm>
+        <MudItem xs="6" sm="6" md="6" lg="6" xl="6">
+            <MudTextField @bind-Value="fqdnName" Label="Enter FQDN to resolve" For="@(() => fqdnName)" />
+        </MudItem>
+        <MudItem xs="6" sm="6" md="6" lg="6" xl="6">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="FetchData">Resolve</MudButton>
+        </MudItem>
         <MudItem xs="12" sm="12" md="12" lg="12" xl="12">
             <MudTextField T="string" Label="Response" Text="@jsonData" Lines="12"></MudTextField>
         </MudItem>
@@ -42,11 +40,6 @@
                 Console.WriteLine(ex.ToString());
             }
         }
-    }
-    private void HandleKeyPress(KeyboardEventArgs e)
-    {
-        if (e.Key == "Enter")
-            FetchData();
     }
 
     public static readonly Dictionary<int, string> RecordTypeNames = new Dictionary<int, string>
